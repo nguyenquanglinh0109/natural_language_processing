@@ -1,33 +1,35 @@
 from week_2.core.interfaces import Vectorizer
-from week_2.preprocessing.regex_tokenizer import RegexTokenizer
 
 class CountVectorizer(Vectorizer):
     def __init__(self, tokenizer):
-        self._tokenizer = tokenizer
-        # self.vocab_: Dict[str, int] = {}
-        self.vocab = []
         super().__init__()
+        self._tokenizer = tokenizer
+        self.vocab_: dict[str, int] = {}  # từ python 3.9 có thể dùng trực tiếp list, dict thay vì import từ Typing (list, Dict)
+
 
     def fit(self, corpus) -> None:
-        text = ' '.join(corpus)
-        tokens = RegexTokenizer().tokenizer(text)
-        vocab = list(set(tokens)) + ["<UNK>"]
-        return list(vocab)
+        words = set()
+        for text in corpus:
+            tokens = self._tokenizer.tokenizer(text)
+            words.update(tokens)
+        
+        words = sorted(list(words))
+        words.insert(0, "<UNK>")
+        self.vocab_ = {token: i for i, token in enumerate(words)}
     
-    def transform(self, documents):
-        # check vocab trước, khởi tạo [0] * vocab_size, count số lượng
-        count_vectors = []
-        self.vocab = self.fit(documents)
-        for document in documents:
-            document = [self.vocab.index(i) if i in self.vocab else len(self.vocab) for i in RegexTokenizer().tokenizer(document)]
-            count_vectors.append(document)
+    def transform(self, documents) -> list[list[int]]:
+        if not self.vocab_:
+            raise ValueError("Don't have vocab, use fit() to create")
+        vectors = []
 
-        return count_vectors
+        for document in documents:
+            count_vector = [0] * len(self.vocab_)
+            tokens = self._tokenizer.tokenizer(document)
+            for token in tokens:
+                count_vector[self.vocab_[token]] += 1
+            vectors.append(count_vector)
+        return vectors
     
     def fit_transform(self, corpus):
-        count_vectors = []
-        for document in corpus:
-            document = [self.vocab.index(i) if i in self.vocab else len(self.vocab) for i in RegexTokenizer().tokenizer(document)]
-            count_vectors.append(document)
-
-        return count_vectors
+        self.fit(corpus)
+        return self.transform(corpus)

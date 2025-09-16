@@ -7,5 +7,5 @@ class RegexTokenizer(Tokenizer):
 
     def tokenizer(self, text):
         pattern = r"\w+|[^\w\s]"
-        tokens = re.split(pattern, text)
+        tokens = re.findall(pattern, text)
         return tokens

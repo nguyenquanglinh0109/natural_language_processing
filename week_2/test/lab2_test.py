@@ -15,13 +15,12 @@ def main():
 
     count_vectorizer = CountVectorizer(regex_tokenizer)
     count_vectorizer.fit(corpus=corpus)
+    print(corpus)
     print(count_vectorizer.vocab_)    
 
     count_vectors = count_vectorizer.transform(corpus)
-    return count_vectors
+    print(count_vectors)
 
 
 if __name__ == "__main__":
-    
-    count_vectors = main()
-    print(count_vectors)
+    main()

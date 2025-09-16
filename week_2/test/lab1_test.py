@@ -10,8 +10,13 @@ if __name__ == "__main__":
     simple_tokenizer = SimpleTokenizer()
     regex_tokenizer = RegexTokenizer()
 
-    text = "Hello, world!"
-    simple_tokens = simple_tokenizer.tokenizer(text)
-    regex_tokens = regex_tokenizer.tokenizer(text)
-    print("Simple tokens:\n", simple_tokens)
-    print("Regex tokens:\n", simple_tokens)
+    corpus = [
+        "Hello, world! This is a test.",
+        "NLP is fascinating... isn't it?",
+        "Let's see how it handles 123 numbers and punctuation!"
+    ]
+    for text in corpus:
+        print(text)
+        print(simple_tokenizer.tokenizer(text))
+        print(regex_tokenizer.tokenizer(text))
+        print("=" * 50)

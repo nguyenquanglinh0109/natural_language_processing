@@ -14,7 +14,7 @@ class SimpleTokenizer(Tokenizer):
 
     def tokenizer(self, text):
         text = text.lower()
-        pattern = r"([ ,.!])"
+        pattern = r"([ ,.!?])"
         tokens = re.split(pattern, text)
         tokens = [i for i in tokens if i != '' and i != ' ']
         return tokens

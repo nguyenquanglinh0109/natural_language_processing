@@ -1,16 +1,44 @@
 # **TIMELINE**
-+ [<ins>Week 1 (09/09/25)</ins>](#week-1)
-+ [<ins>Week 2 (15/09/25)</ins>](#week-1)
++ [<ins>Lab 1,2: Tokenization, Count Vectorization</ins>](#lab-12-tokenization-count-vectorization)
++ [<ins>Lab 3: Word Embeddings</ins>](#lab-3-word-embeddings)
     + [SimpleTokenizer and RegexTokenizer](#simpletokenizer-and-regextokenizer)
-    + [Bag of Words](#bag-of-words-representation)
-
-# **Week 1**
+    + [Bag of Words](#bag-of-words)
++ [<ins>Lab 4: Text Classification</ins>](#lab-4-text-classification)
 
 ---
 
-# **Week 2**
+# **Lab 1,2: Tokenization, Count Vectorization**
 ---
 ## SimpleTokenizer and RegexTokenizer
+### Implement
+```
+1. Define interface: Tokenizer with abstract method tokenize
+Implement: SimpleTokenizer (split by [ ,.?]), RegexTokenizer (split by pattern: "\w+|[^\w\s]")
+Evaluation: 
+  + sample test: corpus = [
+                    "Hello, world! This is a test.",
+                    "NLP is fascinating... isn't it?",
+                    "Let's see how it handles 123 numbers and punctuation!"
+                ]
+  + UD Englist EWT dataset
+
+2. Define interface: Vectorizer with abstract method fit, transform, fit_transform
+Implement: Bag of words
+Evaluation: 
+  + sample test: corpus = [
+                    "Hello, world! This is a test.",
+                    "NLP is fascinating... isn't it?",
+                    "Let's see how it handles 123 numbers and punctuation!"
+                ]
+  + UD Englist EWT dataset
+```
+
+### Run code 
+```
+py -m test.lab1_test.py
+```
+
+### Result
 ```text
 Doc1: Hello, world! This is a test.
 
@@ -29,9 +57,26 @@ Doc3: Let's see how it handles 123 numbers and punctuation!
 Simple: ["let's", 'see', 'how', 'it', 'handles', '123', 'numbers', 'and', 'punctuation', '!']
 Regex: ['Let', "'", 's', 'see', 'how', 'it', 'handles', '123', 'numbers', 'and', 'punctuation', '!']
 ==================================================
+
+
+Nhận xét: 
+  + SimpleTokenizer tách thành các token đơn giản với khoảng trắng và các dấu câu: let's -> let's
+  + RegexTokenizer tách thành các token với biểu thức chính quy: Let's -> [Let, ', s]
 ```
 
+
 ## Implement Bag of Words
+### Implement
+```
+Implement Bag of Words with dictionary words get from corpus
+Use transform to convert documents to vectors
+```
+
+### Run code 
+```
+py -m test.lab2_test.py
+```
+
 ### Corpus
 ```
 Document 1: "I love NLP, you love programming."
@@ -42,6 +87,8 @@ Document 3: "NLP is a subfield of AI."
 ### Vocabulary
 ```
 {'<UNK>': 0, ',': 1, '.': 2, 'AI': 3, 'I': 4, 'NLP': 5, 'a': 6, 'is': 7, 'love': 8, 'of': 9, 'programming': 10, 'subfield': 11, 'you': 12}
+
+==> Tạo tập từ điển từ corpus ban đầu, thêm token <UNK> đại diện cho các từ chưa từng xuất hiện trong corpus
 ```
 ### Bag of Words representation
 ```
@@ -51,27 +98,39 @@ bow_matrix = [
     [  0,   0, 1,  0, 1,   0, 0,  0,    1,  0,          1,        0,   0],  # Doc 2
     [  0,   0, 1,  1, 0,   1, 1,  1,    0,  1,          0,        1,   0]   # Doc 3
 ]
+
+==> Từ nào xuất hiện sẽ được cộng thêm 1 đơn vị, không xuất hiện sẽ là 0.
 ```
 
-# **Week 3**
-Spark\
-Lập trình hàm
+
+## Problem: No
+## Reference: No
+## Pretrained Model: No
 
 
-# **Week 4**
-## Visualize work embedding with PCA
-### Word2Vec
-![Visualize Word2Vec embedding](./image/word2vec.png)
+---
+# **Lab 3: Word Embeddings**
+## Word embedding
+### Implement
+```
+1. Implement WordEmbedder use glove-wiki-gigaword-50 model with methods:
+  + get vector: get vector of a word
+  + get similar: calculate the similar between two words
+  + get most similarity: get the most (top-n) similarity with a word
+  + embed document: tokenizer, tranform tokens to vectors and mean.
 
-### Glove
-![Visualize Glove embedding](./image/glove.png)
+2. Word2Vec with spark
+```
 
-### fastText
-![Visualize fastText embedding](./image/fastText.png)
+### Run code
+```
+py -m test.lab4_test
+py -m test.lab4_embedding_traninng_demo
+py -m test.lab4_spark_word2vec_demo
+```
 
-
-## Word embedding: Word2Vec, Glove, FastText
-### A vector from Glove embedding (glove-wiki-gigaword-50)
+### Result
+#### A vector from Glove embedding (glove-wiki-gigaword-50)
 ```
 King vector: [ 0.50451   0.68607  -0.59517  -0.022801  0.60046  -0.13498  -0.08813
   0.47377  -0.61798  -0.31012  -0.076666  1.493    -0.034189 -0.98173
@@ -83,13 +142,13 @@ King vector: [ 0.50451   0.68607  -0.59517  -0.022801  0.60046  -0.13498  -0.088
  -0.51042 ]
 ```
 
-### Cosine similarity
+#### Cosine similarity
 ```
 King and Queen cosine similarity: 0.7839043
 King and Man cosine similarity: 0.53093773
 ```
 
-### Most similarity
+#### Most similarity
 ```
 Most similar words to 'computer':
 computers: 0.9165045022964478
@@ -104,7 +163,7 @@ applications: 0.7912740707397461
 pc: 0.7883159518241882
 ```
 
-### Embed document
+#### Embed document
 ```
 Document: "The queen rules the country."
 
@@ -127,3 +186,163 @@ Document vector: [-0.02883     0.38843602 -0.589208    0.0238326   0.04681259  0
   0.01643366 -0.40680504]
 ```
 
+#### Similarity from trained model Word2Vec
+```
++---------+------------------+
+|     word|        similarity|
++---------+------------------+
+|  desktop|0.6893201470375061|
+|computers|0.6467169523239136|
+|   laptop|0.6318738460540771|
+| software|0.5909299254417419|
+|   device|0.5804780721664429|
++---------+------------------+
+```
+
+
+#### Explain
+```
++ Pretrained embedding lấy từ model glove-wiki-gigaword-50, mỗi từ được ánh xạ sang một vector gồm 50 chiều, như trên từ 'king' được biểu diễn bởi một vector 50 chiều.
++ Cosine similar: đo độ tương đồng giữa hai vector từ bằng công thức cosine, giá trị càng gần 1 thì độ tương đồng càng lớn.
++ Most similarity: dựa vào cosine similar giữa từng cặp từ để trả về top_k từ có độ tương đồng lớn nhất, ở đây danh sách các từ gần với 'computer' trong không gian vector đều có sự tương đồng và liên quan lớn tới từ này trong thực tế.
++ Embed document: document được tách thành các token với RegexTokenizer, sau đó từng token sẽ được chuyển thành vector dựa trên pretrained model rồi lấy trung bình của toàn bộ vector khi đó ta được một vector biểu diễn đại diện cho toàn bộ câu.
++ Similarity from trained model Word2Vec: cho kết quả tương đối tốt, khi các từ trong top-5 (desktop, computers, laptop, software, device) đều gần nghĩa hoặc có liên quan tới từ 'computer'. Tuy nhiên so với điểm số similarity từ pretrained model có thể thấy được khả năng biểu diễn ngữ nghĩa chưa mạnh mẽ bằng.
+```
+
+
+## Visualize work embedding with PCA
+### Implement
+```
+Get pretrained embedding: "word2vec-google-news-300", "glove-wiki-gigaword-300", "fasttext-wiki-news-subwords-300".
+Visualize with PCA.
+```
+
+### Run code
+```
+word2vec_vector = gensim.downloader.load("word2vec-google-news-300")
+glove_vector = gensim.downloader.load("glove-wiki-gigaword-300")
+fasttext_vector = gensim.downloader.load("fasttext-wiki-news-subwords-300")
+
+Run file 'word_embedding_visualization.ipynb'
+```
+
+### Result
+#### Word2Vec
+![Visualize Word2Vec embedding](./image/word2vec.png)
+
+#### Glove
+![Visualize Glove embedding](./image/glove.png)
+
+#### fastText
+![Visualize fastText embedding](./image/fastText.png)
+
+#### Explain
+```
+Trong phần trực quan hoá PCA với Word2Vec có thể thấy được mối quan hệ tuyến tính giữa các cặp từ: king-queen, man-woman, boy-girl; các đường nối giữa chúng dường như gần song song với nhau cho thấy khả năng biểu diễn ngữ nghĩa của Word2Vec do phương pháp huấn luyện những cặp từ này thường xuất hiện cùng nhau.
+
+Với Glove kết quả cho ra giữa các cặp thủ đô-đất nước cũng cho kết quả tương đối giống Word2Vec.
+
+Với fastText, kết quả cho ra không thể hiện rõ mối quan hệ tuyến tính giữa các cặp từ; tuy nhiên với các cặp từ gần nghĩa hoặc thường xuất hiện trong cùng ngữ cảnh thì tạo thành cụm tương đối rõ rêt: cụm boy-girl, man-woman, king-queen
+```
+
+## Problem:
+1. Khi huấn luyện mô hình Word2Vec bị tràn bộ nhớ -> lọc bỏ bớt các từ xuất hiện ít hơn 2 lần.
+
+
+## Reference: 
+[Gensim](https://radimrehurek.com/gensim/) \
+[PySpark](https://spark.apache.org/docs/latest/api/python/reference/index.html)
+
+## Pretrain models
+```
+"word2vec-google-news-300", 
+"glove-wiki-gigaword-300", 
+"fasttext-wiki-news-subwords-300"
+```
+
+---
+# **Lab 4: Text classification**#
+## Implement
+```
+1. Implement text_classifier.py with some methods:
+  + fit: train logistic regression model from sklearn
+  + predict: use the lr model to predict test dataset
+  + evaluate: return acc, precision, recall, f1_score
+
+2. Implement spark_sentiment_analysis.py:
+  + preprocessing: Tokenizer, StopWordsRemover, HashingTF, IDF
+  + train model: Logistic Regression
+  + evaluate: return accuracy
+
+3. Improve text classifier: improvement_test.py
+  + preprocessing: remove uncommon word
+  + model: change lr -> gradient boost
+```
+
+## Run code
+```
+py -m test.lab5_test
+py -m test.lab5_spark_sentiment_analysis
+py -m test.lab5_improvement_test
+```
+
+## Result
+### Simple classifier
+```
+data_path = "data\sentiments.csv"
+Run: py -m test.lab5_test
+
+Predicts: [ 1  1  1  1 -1  1 -1 -1 -1  1  1  1 -1  1  1 -1  1  1  1 -1 ...]
+True: [-1 -1  1 -1 -1  1  1 -1 -1  1  1  1 -1 -1  1 -1  1  1  1 -1 ...]
+
+Evaluation:
+  + Accuracy: 0.7947
+  + Precision: 0.8183
+  + Recall: 0.8675
+  + F1: 0.8422
+```
+
+### Spark sentiment analyis
+```
+Run: py -m test.lab5_spark_sentiment_analysis
+
+Evaluation:
+  + Accuracy: 0.7333
+  + Precision: 0.7314
+  + Recall: 0.7333
+  + F1-score: 0.7322
+```
+
+### Improvement
+```
+Run: py -m test.lab5_improvement_test
+
+Uncommon words: ['sooner', 'indicating', 'phones', '166', 'fav', 'reminder', 'reporting', 'patent', 'deals', 'cien', 'th', 'dds', 'smaller', 'email', 'chain', 'commentary', 'initiated', 'msh', '2006', '470', 'charm', 'te', 'whisper', 'tweet', 'skx', 'formed', 'uncertainty', 'pennant', 'raising', 'website', 'type', 'earning', 'model', 'strain', 'epidemic', 'peaks', 'beâ', 'paid', 'kirby', 'toe', 'search', 'tes', 'collapse', 'speculation', 'included', 'wnc', 'nti', 'ife', 'daytrade', 'nailed', 'quietly', 'send', 'fas', 'gdi', 'onxx', 'forces', 'cbs', 'nxt', 'smartphone', 'itâ', 'emerging', 'bcd', 'advisors', 'purchases', 'doubled', 'employee', 'bases', 'thank', 'ty', 'ceiling', '434', 'dude', 'amwd', 'mp', ...]
+
+Evaluation:
+  + Accuracy: 0.7023
+  + Precision: 0.7065
+  + Recall: 0.9044
+  + F1: 0.7933
+
+```
+
+## Explain
+```
+Dữ liệu được lấy từ: "data\sentiment.csv", chia thành train và test với tỉ lệ 80:20.
+Toàn bộ sau đó câu sau đó được tokenizer, sau đó được vector hoá với 2 phương pháp: CountVectorizer, Pretrained embedding
+Các chỉ số đánh giá được lấy từ kết quả dự đoán của mô hình so với nhãn thât.
+
+Phương pháp gốc: CountVectorizer + Logistic Regression cho kết quả tương đối tốt với Acc: 79,47% và F1: 84,22%
+
+Spark: RegexTokenizer + StopwordRemover + HashingTF + IDF, cho kết quả thấp hơn với Acc: 73,33 và F1: 73,22
+
+Phương pháp cải thiện: RegexTokenizer + RemoveUncommonWord + GradientBoostingClassifier, cho kết quả với Acc: 0.7023 và F1: 0.7933
+```
+
+## Problem
+1. Đã thử cải thiện bằng một số phương pháp tiền xử lý, cũng như thay đổi thành các mô hình phân loại hiệu quả hơn tuy nhiên các phương pháp đều cho hiệu suất kém hơn so với mô hình gốc ban đầu.
+
+## Reference
+[Sklearn](https://scikit-learn.org/stable/index.html) \
+[PySpark](https://spark.apache.org/docs/latest/api/python/reference/index.html)

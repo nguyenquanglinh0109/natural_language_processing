@@ -9,6 +9,7 @@ tensorboard
 from src.core.interfaces import Vectorizer
 from typing import List, Dict, Tuple
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import (
     accuracy_score, 
     precision_score, 
@@ -33,6 +34,7 @@ class TextClassifier:
         """
         print("fitting model...")
         self._model = LogisticRegression(solver="liblinear")
+        # self._model = GradientBoostingClassifier()
         vectors = self.vectorizer.fit_transform(texts)
         self._model.fit(vectors, labels)
         

@@ -133,7 +133,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=0)
     
-    num_epochs = 10
+    num_epochs = 20
     train_model(model, optimizer, criterion, train_loader, val_loader, num_epochs)
     
     test_loss, test_acc = evaluate_epoch(model, criterion, test_loader, num_epochs)

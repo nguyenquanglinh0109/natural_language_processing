@@ -4,6 +4,8 @@
     + [SimpleTokenizer and RegexTokenizer](#simpletokenizer-and-regextokenizer)
     + [Bag of Words](#bag-of-words)
 + [<ins>Lab 4: Text Classification</ins>](#lab-4-text-classification)
++ [<ins>Lab 5: Token classification</ins>](#lab-5-token-classification)
++ [<ins>Lab 6: Transformer</ins>](#lab-6-transformer)
 
 ---
 
@@ -605,7 +607,7 @@ Không gặp vấn đề gì
 [Pytorch](https://pytorch.org/)
 
 
-# **Lab6: Transformer**
+# **Lab 6: Transformer**
 ## Implement
 ```
 1. Masked Language Model

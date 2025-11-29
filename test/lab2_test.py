@@ -36,7 +36,7 @@ def test_ud_dataset():
     
 if __name__ == "__main__":
     # a simple test
-    # main()
+    main()
     
     # test_ud_dataset
     test_ud_dataset()

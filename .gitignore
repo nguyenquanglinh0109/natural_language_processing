@@ -1,3 +1,10 @@
+# model
+results/
+trained_model/
+
+# timeline
+timeline/
+
 # data
 data/
 bigdl_dllib/

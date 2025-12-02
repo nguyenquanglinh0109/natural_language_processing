@@ -1,5 +1,5 @@
 
-# **Lab6: Transformer**
+# **Lab6: Dependency parsing**
 ## Implement
 ```
 1. Dependency parsing with Spacy
